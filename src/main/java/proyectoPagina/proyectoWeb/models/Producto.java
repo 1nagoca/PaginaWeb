@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import proyectoPagina.proyectoWeb.enums.TipoCalzado;
 
 @AllArgsConstructor
 @Getter
@@ -16,5 +17,5 @@ public class Producto {
     private String nombre;
     private String talla;
     private double precio;
-    private String tipo;
+    private TipoCalzado tipo;
 }

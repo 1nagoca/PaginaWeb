@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class DetallePedido {
-    private double cantidad;
-    private int subtotal;
-    private DetallePedido detallePedido;
+    private Producto producto;
+    private int cantidad;
+    private double subtotal;
 }

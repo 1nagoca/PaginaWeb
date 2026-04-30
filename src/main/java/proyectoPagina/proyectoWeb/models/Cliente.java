@@ -11,14 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class Cliente extends Persona {
-
     private String nitEmpresa;
     private String idEmpresa;
-    private String cedula;
-    private String nombre;
-    private String telefono;
-    private String direccion;
-    private String correo;
-    private String ciudad;
 }
 
