@@ -1,4 +1,4 @@
-package proyectoPagina.proyectoWeb.nums;
+package proyectoPagina.proyectoWeb.enums;
 
 public enum MetodoPago {
     EFECTIVO,

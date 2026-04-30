@@ -1,10 +1,14 @@
 package proyectoPagina.proyectoWeb.models;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import proyectoPagina.proyectoWeb.enums.EstadoFactura;
+import proyectoPagina.proyectoWeb.enums.MetodoPago;
 
 import java.util.Date;
+
 
 @AllArgsConstructor
 @Getter
@@ -16,7 +20,7 @@ public class Factura {
     private Empleado empleado;
     private Date fechaEmision;
     private double total;
-    private String metodoPago;
-    private String estado;
+    private MetodoPago metodoPago;
+    private EstadoFactura estado;
 
 }
