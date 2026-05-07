@@ -15,11 +15,11 @@ import java.util.List;
 @NoArgsConstructor
 
 
-public class Pedido {
-    private Empleado empleado;
+public class Order {
+    private Employee employee;
     private Date fecha;
     private EstadoPedido estado;
-    private Cliente cliente;
-    private List<DetallePedido> detalles;
+    private Customer customer;
+    private List<DetailOrder> detalles;
 
 }

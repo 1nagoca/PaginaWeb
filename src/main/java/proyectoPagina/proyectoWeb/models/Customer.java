@@ -10,10 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 
-public class Proveedor {
-    private String nombre;
-    private String telefono;
-    private String direccion;
-    private String correo;
-
+public class Customer extends Person {
+    private String nitEmpresa;
+    private String idEmpresa;
 }
+

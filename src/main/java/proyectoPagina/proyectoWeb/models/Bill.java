@@ -15,9 +15,9 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 
-public class Factura {
-    private Pedido pedido;
-    private Empleado empleado;
+public class Bill {
+    private Order order;
+    private Employee employee;
     private Date fechaEmision;
     private double total;
     private MetodoPago metodoPago;
