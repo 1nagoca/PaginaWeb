@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Solicitudes - Admin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+        header {
+            background: #1e3a5f; color: white; padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        header h1 { font-size: 1.4rem; }
+        header a { color: #aad4f5; text-decoration: none; font-size: 0.9rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        /* Indicadores */
+        .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .card {
+            background: white; border-radius: 10px; padding: 1.5rem;
+            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+            border-top: 4px solid #ccc;
+        }
+        .card.total   { border-top-color: #1e3a5f; }
+        .card.pendiente { border-top-color: #f59e0b; }
+        .card.aprobada  { border-top-color: #10b981; }
+        .card.rechazada { border-top-color: #ef4444; }
+        .card .num { font-size: 2.5rem; font-weight: 700; }
+        .card .label { font-size: 0.85rem; color: #777; margin-top: 0.3rem; text-transform: uppercase; letter-spacing: .05em; }
+
+        /* Tabla */
+        .table-wrapper { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.08); overflow: hidden; }
+        .table-wrapper h2 { padding: 1.2rem 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #e5e7eb; }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { background: #f8fafc; }
+        th { padding: .75rem 1rem; text-align: left; font-size: .8rem; text-transform: uppercase; color: #6b7280; letter-spacing: .05em; }
+        td { padding: .85rem 1rem; border-top: 1px solid #f1f5f9; font-size: .9rem; vertical-align: top; }
+        tbody tr:hover { background: #fafbff; }
+
+        /* Badges de estado */
+        .badge {
+            display: inline-block; padding: .2rem .65rem; border-radius: 999px;
+            font-size: .75rem; font-weight: 600; letter-spacing: .03em;
+        }
+        .badge-PENDIENTE  { background: #fef3c7; color: #92400e; }
+        .badge-APROBADA   { background: #d1fae5; color: #065f46; }
+        .badge-RECHAZADA  { background: #fee2e2; color: #991b1b; }
+
+        .empty { text-align: center; padding: 2rem; color: #9ca3af; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>&#9741; Panel de Administración — Solicitudes</h1>
+    <a th:href="@{/logout}">Cerrar sesión</a>
+</header>
+
+<div class="container">
+    <!-- Indicadores -->
+    <div class="cards">
+        <div class="card total">
+            <div class="num" th:text="${total}">0</div>
+            <div class="label">Total</div>
+        </div>
+        <div class="card pendiente">
+            <div class="num" th:text="${pendientes}">0</div>
+            <div class="label">Pendientes</div>
+        </div>
+        <div class="card aprobada">
+            <div class="num" th:text="${aprobadas}">0</div>
+            <div class="label">Aprobadas</div>
+        </div>
+        <div class="card rechazada">
+            <div class="num" th:text="${rechazadas}">0</div>
+            <div class="label">Rechazadas</div>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper">
+        <h2>Listado de solicitudes</h2>
+        <div th:if="${#lists.isEmpty(solicitudes)}" class="empty">No hay solicitudes registradas.</div>
+        <table th:unless="${#lists.isEmpty(solicitudes)}">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuario</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Fecha creación</th>
+                    <th>Fecha resolución</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="s : ${solicitudes}">
+                    <td th:text="${s.id}"></td>
+                    <td th:text="${s.solicitante.username}"></td>
+                    <td th:text="${s.tipo}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="'badge-' + ${s.estado}"
+                              th:text="${s.estado}"></span>
+                    </td>
+                    <td th:text="${#temporals.format(s.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${s.fechaResolucion != null ? #temporals.format(s.fechaResolucion, 'dd/MM/yyyy HH:mm') : '—'}"></td>
+                    <td th:text="${s.observacion != null ? s.observacion : '—'}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
