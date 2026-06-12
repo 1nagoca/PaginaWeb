@@ -38,7 +38,6 @@ class MensajeControllerTest {
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
 
-    // Prueba 1: GET /api/mensajes/bandeja-entrada con usuario autenticado -> HTTP 200
     @Test
     @WithMockUser(username = "usuario1", roles = "USER")
     void bandejaEntrada_autenticado_retorna200() throws Exception {
@@ -48,14 +47,12 @@ class MensajeControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // Prueba 2: GET /api/mensajes/bandeja-entrada sin autenticación -> HTTP 401 o 403
     @Test
     void bandejaEntrada_sinAutenticacion_retorna401o403() throws Exception {
         mockMvc.perform(get("/api/mensajes/bandeja-entrada"))
                 .andExpect(status().is4xxClientError());
     }
 
-    // Prueba 3: POST /api/mensajes con cuerpo vacío -> HTTP 400
     @Test
     @WithMockUser(username = "usuario1", roles = "USER")
     void enviarMensaje_camposVacios_retorna400() throws Exception {

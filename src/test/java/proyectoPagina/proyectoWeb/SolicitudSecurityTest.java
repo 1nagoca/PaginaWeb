@@ -36,7 +36,6 @@ class SolicitudSecurityTest {
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
 
-    // Prueba 1: POST /api/solicitudes sin autenticación -> HTTP 401 o 403
     @Test
     void crearSolicitud_sinAutenticacion_retorna401o403() throws Exception {
         SolicitudRequest req = new SolicitudRequest(TipoSolicitud.SOPORTE, "Necesito soporte");
@@ -47,7 +46,6 @@ class SolicitudSecurityTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    // Prueba 2: POST /api/solicitudes con usuario autenticado (sin rol especial) -> HTTP 201
     @Test
     @WithMockUser(username = "usuario1", roles = "USER")
     void crearSolicitud_usuarioAutenticado_retorna201() throws Exception {
@@ -62,7 +60,6 @@ class SolicitudSecurityTest {
                 .andExpect(status().isCreated());
     }
 
-    // Prueba 3: PUT /api/solicitudes/{id}/aprobar con rol USER (sin ADMIN) -> HTTP 403
     @Test
     @WithMockUser(username = "usuario1", roles = "USER")
     void aprobarSolicitud_sinRolAdmin_retorna403() throws Exception {
