@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Panel de Solicitudes - Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .badges { display:flex; gap:12px; margin-bottom:20px; }
+        .badge { padding:10px 14px; border-radius:6px; color:white; font-weight:bold; }
+        .badge.total { background:#6c757d; }
+        .badge.pendiente { background:#ffc107; color:#000; }
+        .badge.aprobada { background:#28a745; }
+        .badge.rechazada { background:#dc3545; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:10px; border-bottom:1px solid #ddd; text-align:left; }
+        .estado-pendiente { color:#856404; font-weight:bold; }
+        .estado-aprobada { color:#155724; font-weight:bold; }
+        .estado-rechazada { color:#721c24; font-weight:bold; }
+    </style>
+</head>
+<body>
+<h1>Panel de Solicitudes</h1>
+
+<div class="badges">
+    <div class="badge total">Total: <span th:text="${indicadores.total}">0</span></div>
+    <div class="badge pendiente">Pendientes: <span th:text="${indicadores.pendientes}">0</span></div>
+    <div class="badge aprobada">Aprobadas: <span th:text="${indicadores.aprobadas}">0</span></div>
+    <div class="badge rechazada">Rechazadas: <span th:text="${indicadores.rechazadas}">0</span></div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Solicitante</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Fecha creación</th>
+            <th>Observación</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${solicitudes}">
+        <td th:text="${s.solicitante}">user</td>
+        <td th:text="${s.tipo}">SOPORTE</td>
+        <td>
+            <span th:class="${s.estado} == 'PENDIENTE' ? 'estado-pendiente' : (${s.estado} == 'APROBADA' ? 'estado-aprobada' : (${s.estado} == 'RECHAZADA' ? 'estado-rechazada' : ''))"
+                  th:text="${s.estado}">PENDIENTE</span>
+        </td>
+        <td th:text="${#dates.format(s.creadoEn, 'dd/MM/yyyy HH:mm')}">01/01/2026 12:00</td>
+        <td th:text="${s.notasAdmin}">-</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+

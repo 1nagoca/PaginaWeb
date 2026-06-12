@@ -1,0 +1,307 @@
+
+EXAMEN FINAL – PROGRAMACIÓN WEB
+RESUMEN DETALLADO DE REQUERIMIENTOS
+
+==================================================
+INSTRUCCIONES GENERALES
+==================================================
+
+1. Crear una rama llamada: previo-final-codigo.
+2. Trabajar sobre el proyecto Spring Boot existente del grupo.
+3. No crear un proyecto nuevo.
+4. Cada módulo debe tener sus propias entidades, servicios, controladores, plantillas y pruebas.
+5. Solo se permite modificar código existente para registrar endpoints en SecurityConfig.
+6. Se calificará únicamente lo que funcione al momento del cierre.
+7. Los endpoints deben responder con códigos HTTP correctos:
+   - 200 OK
+   - 201 Created
+   - 400 Bad Request
+   - 403 Forbidden
+   - 404 Not Found
+8. Todas las pruebas deben ejecutarse correctamente mediante:
+   mvnw test
+
+==================================================
+MÓDULO 1 – SISTEMA DE MENSAJES INTERNOS
+==================================================
+
+Objetivo:
+Implementar un sistema de mensajería interna entre usuarios registrados.
+
+Información que debe almacenar un mensaje:
+
+- Emisor (usuario que envía).
+- Receptor (usuario que recibe).
+- Asunto.
+- Contenido.
+- Estado leído/no leído (boolean).
+- Fecha y hora de envío generada automáticamente.
+
+Funcionalidades:
+
+1. Enviar mensajes entre usuarios autenticados.
+2. Consultar bandeja de entrada.
+3. Consultar mensajes enviados.
+4. Marcar mensajes como leídos.
+5. Consultar cantidad de mensajes no leídos.
+
+Endpoints:
+
+POST /api/mensajes
+- Acceso: Usuario autenticado.
+- Acción: Crear mensaje.
+- Respuesta: 201 Created.
+
+GET /api/mensajes/bandeja-entrada
+- Acceso: Usuario autenticado.
+- Acción: Obtener mensajes recibidos.
+
+GET /api/mensajes/enviados
+- Acceso: Usuario autenticado.
+- Acción: Obtener mensajes enviados.
+
+PUT /api/mensajes/{id}/leer
+- Acceso: Usuario autenticado.
+- Acción: Marcar mensaje como leído.
+- Respuesta: 200 OK o 404 Not Found.
+
+GET /api/mensajes/no-leidos/count
+- Acceso: Usuario autenticado.
+- Respuesta:
+{
+  "count": N
+}
+
+==================================================
+MÓDULO 2 – SISTEMA DE SOLICITUDES
+==================================================
+
+Objetivo:
+Implementar un sistema de solicitudes administradas mediante flujo de estados.
+
+Tipos permitidos:
+
+- SOPORTE
+- ACCESO
+- INFORMACIÓN
+
+Estados permitidos:
+
+- PENDIENTE
+- APROBADA
+- RECHAZADA
+
+Información de una solicitud:
+
+- Solicitante.
+- Tipo.
+- Descripción.
+- Estado.
+- Observación del administrador.
+- Fecha de creación.
+- Fecha de resolución.
+
+Reglas:
+
+- Toda solicitud inicia en estado PENDIENTE.
+- Solo administradores pueden aprobar o rechazar.
+- Aprobar o rechazar requiere observación.
+- Al resolver se registra automáticamente fecha de resolución.
+
+Funcionalidades:
+
+1. Crear solicitud.
+2. Ver solicitudes propias.
+3. Ver todas las solicitudes (ADMIN).
+4. Aprobar solicitud.
+5. Rechazar solicitud.
+
+Endpoints:
+
+POST /api/solicitudes
+- Acceso: Usuario autenticado.
+- Acción: Crear solicitud.
+- Estado inicial: PENDIENTE.
+- Respuesta: 201 Created.
+
+GET /api/solicitudes/mis-solicitudes
+- Acceso: Usuario autenticado.
+- Acción: Ver solicitudes propias.
+
+GET /api/solicitudes
+- Acceso: ADMIN.
+- Acción: Ver todas las solicitudes.
+
+PUT /api/solicitudes/{id}/aprobar?observacion=texto
+- Acceso: ADMIN.
+- Acción: Aprobar solicitud.
+- Estado: APROBADA.
+- Respuesta: 200 OK.
+
+PUT /api/solicitudes/{id}/rechazar?observacion=texto
+- Acceso: ADMIN.
+- Acción: Rechazar solicitud.
+- Estado: RECHAZADA.
+- Respuesta: 200 OK.
+
+==================================================
+MÓDULO 3 – PANEL ADMINISTRATIVO DE SOLICITUDES
+==================================================
+
+URL:
+
+GET /admin/solicitudes/panel
+
+Acceso:
+
+- Exclusivamente usuarios con rol ADMIN.
+
+Contenido requerido:
+
+1. Indicadores:
+   - Total solicitudes.
+   - Total pendientes.
+   - Total aprobadas.
+   - Total rechazadas.
+
+2. Tabla de solicitudes:
+   - Usuario solicitante.
+   - Tipo.
+   - Estado.
+   - Fecha de creación.
+   - Observación.
+
+3. Diferenciación visual:
+   - Colores.
+   - Badges.
+   - Íconos.
+   - Texto coloreado.
+
+4. Seguridad:
+   - Usuarios sin rol ADMIN:
+       * Redirección a login
+       o
+       * Error 403 Forbidden.
+
+Tecnología:
+
+- Usar el motor de plantillas existente.
+- Si el proyecto es solo API REST:
+  agregar spring-boot-starter-thymeleaf.
+
+Ubicación de plantillas:
+
+src/main/resources/templates/
+
+==================================================
+MÓDULO 4 – PRUEBAS WEBMVCTEST
+==================================================
+
+Clase requerida:
+
+MensajeControllerTest
+
+Tecnologías:
+
+- @WebMvcTest
+- MockMvc
+- @MockBean
+
+No debe conectarse a la base de datos.
+
+Pruebas obligatorias:
+
+1.
+GET /api/mensajes/bandeja-entrada
+Usuario autenticado
+Resultado esperado:
+HTTP 200 OK
+
+2.
+GET /api/mensajes/bandeja-entrada
+Sin autenticación
+Resultado esperado:
+HTTP 401 o 403
+
+3.
+POST /api/mensajes
+Con cuerpo vacío o datos faltantes
+Resultado esperado:
+HTTP 400 Bad Request
+
+Comando de validación:
+
+mvnw test -Dtest=MensajeControllerTest
+
+==================================================
+MÓDULO 5 – PRUEBAS DE SEGURIDAD
+==================================================
+
+Clase requerida:
+
+SolicitudSecurityTest
+
+Tecnologías:
+
+- @SpringBootTest
+- @AutoConfigureMockMvc
+- @WithMockUser
+
+Pruebas obligatorias:
+
+1.
+POST /api/solicitudes
+Sin autenticación
+Resultado esperado:
+HTTP 401 o 403
+
+2.
+POST /api/solicitudes
+Usuario autenticado normal
+Resultado esperado:
+HTTP 201 Created
+
+3.
+PUT /api/solicitudes/{id}/aprobar
+Usuario con rol USER
+Sin rol ADMIN
+Resultado esperado:
+HTTP 403 Forbidden
+
+Importante:
+
+- Debe rechazarse antes de ejecutar lógica de negocio.
+- No importa si el ID existe o no.
+
+Comando de validación:
+
+mvnw test -Dtest=SolicitudSecurityTest
+
+==================================================
+RESUMEN FINAL
+==================================================
+
+Entidades principales:
+- Mensaje
+- Solicitud
+
+Controladores:
+- MensajeController
+- SolicitudController
+- Controlador del panel administrativo
+
+Pruebas requeridas:
+- MensajeControllerTest
+- SolicitudSecurityTest
+
+Roles involucrados:
+- USER
+- ADMIN
+
+Aspectos clave de evaluación:
+- Seguridad.
+- Correctos códigos HTTP.
+- Persistencia de datos.
+- Restricción de acceso.
+- Flujo de estados.
+- Correcta ejecución de pruebas.
