@@ -103,6 +103,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+							<configuration>
+								<!-- Avoid using the module path for compilation to keep test dependencies on the classpath -->
+								<useModulePath>false</useModulePath>
+							</configuration>
 				<executions>
 					<execution>
 						<id>default-compile</id>
